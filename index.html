@@ -2,18 +2,6 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0d1b3e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ש&quot;ות">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0d1b3e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ש&quot;ות">
-<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>שאלות ותשובות | דרך צדיקים</title>
 <style>
@@ -119,6 +107,21 @@ header{background:linear-gradient(135deg,#0d1b3e 0%,#1a0a3e 50%,#0d2240 100%);bo
 .prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:6px;transition:width .3s}
 .prog-text{font-size:13px;color:var(--text-muted)}
 
+/* Search clear button */
+.srch-clear{position:absolute;left:38px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:15px;padding:0;line-height:1;transition:color .2s}
+.srch-clear:hover{color:var(--text)}
+
+/* Share button */
+.btn-share{background:linear-gradient(135deg,#1a3a1a,#1e2d1e);border:1px solid #2e7d52;border-radius:8px;color:#4caf84;padding:6px 14px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-share:hover{background:linear-gradient(135deg,#1f4a1f,#243524);border-color:#4caf84;box-shadow:0 0 12px rgba(76,175,132,.25)}
+
+/* Search info bar */
+.srch-bar{background:rgba(240,192,96,.08);border:1px solid rgba(240,192,96,.2);border-radius:10px;padding:8px 14px;font-size:13px;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.srch-bar button{background:none;border:none;color:var(--gold);cursor:pointer;font-size:13px;font-family:inherit;text-decoration:underline}
+
+/* mode-btn disabled */
+.mode-btn:disabled{opacity:.35;cursor:not-allowed}
+
 .loader{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:20px}
 .spin{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 .loader p{color:var(--text-muted);font-size:15px}
@@ -198,10 +201,11 @@ mark{background:rgba(240,192,96,.28);color:var(--gold);border-radius:3px;padding
     <div class="hr"></div>
 
     <div class="sec">
-      <div class="lbl">🔍 חיפוש בתוצאות</div>
+      <div class="lbl">🔍 חיפוש בכל השאלות</div>
       <div class="srch">
         <span class="srch-ico">🔍</span>
         <input type="text" id="srch" placeholder="חפש בשאלות ובתשובות..." oninput="onSearch()">
+        <button class="srch-clear hidden" id="srch-clear" onclick="clearSearch()">✕</button>
       </div>
     </div>
 
@@ -300,24 +304,45 @@ function setMode(m){
 /* Main feed — all Q&As, no category filter */
 async function loadAllQs(){
   isMainFeed = true;
-  catName = '';
+  catName = ''; srchQ='';
+  document.getElementById('srch').value='';
+  document.getElementById('srch-clear').classList.add('hidden');
   offset = 0; loaded = []; total = 0;
   document.getElementById('btn-all-qs').classList.add('active');
-  // Reset category selects visually
   document.getElementById('sel-main').value = '';
   reset('sel-sub','sec-sub'); reset('sel-subsub','sec-subsub');
+  // Disable "load all" for main feed — too many Q&As
+  document.getElementById('mode-all').disabled = true;
+  document.getElementById('mode-all').title = 'לא זמין בדף הראשי';
+  setMode(25);
   setBtn(false);
   hide('welcome'); show('results');
   document.getElementById('results').innerHTML = loaderHTML();
   await fetchPage();
 }
 
-/* Search */
+/* Search — server-side via Meilisearch q param */
 let srchTimer;
 function onSearch(){
   srchQ = document.getElementById('srch').value.trim();
+  const clearBtn = document.getElementById('srch-clear');
+  clearBtn.classList.toggle('hidden', !srchQ);
   clearTimeout(srchTimer);
-  srchTimer = setTimeout(()=>render(loaded), 300);
+  srchTimer = setTimeout(async ()=>{
+    offset=0; loaded=[];
+    hide('welcome'); show('results');
+    document.getElementById('results').innerHTML = loaderHTML();
+    await fetchPage();
+  }, 400);
+}
+
+function clearSearch(){
+  document.getElementById('srch').value='';
+  srchQ='';
+  document.getElementById('srch-clear').classList.add('hidden');
+  offset=0; loaded=[];
+  document.getElementById('results').innerHTML = loaderHTML();
+  fetchPage();
 }
 
 /* Load category Q&As */
@@ -343,6 +368,7 @@ async function fetchPage(){
     const pg = isMainFeed ? 25 : (pageMode === 0 ? 100 : pageMode);
     const body = {offset, limit:pg, sort:['qid:desc']};
     if(catName) body.filter = 'qacat = "'+catName+'"';
+    if(srchQ) body.q = srchQ;
     const r = await fetch(API, {
       method:'POST',
       headers:{'Authorization':'Bearer '+TOK,'Content-Type':'application/json'},
@@ -369,6 +395,7 @@ async function fetchAll(){
   try{
     const body = {offset:0, limit:BATCH, sort:['qid:desc']};
     if(catName) body.filter = 'qacat = "'+catName+'"';
+    if(srchQ) body.q = srchQ;
     const r = await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+TOK,'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d = await r.json();
     total = d.estimatedTotalHits || 0;
@@ -382,6 +409,7 @@ async function fetchAll(){
     while(offset < total){
       const body2 = {offset, limit:BATCH, sort:['qid:desc']};
       if(catName) body2.filter = 'qacat = "'+catName+'"';
+      if(srchQ) body2.q = srchQ;
       const r2 = await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+TOK,'Content-Type':'application/json'},body:JSON.stringify(body2)});
       const d2 = await r2.json();
       const hits2 = d2.hits || [];
@@ -423,18 +451,11 @@ function hl(t, q){
   return esc(t).replace(re, m=>'<mark>'+m+'</mark>');
 }
 
-function filter(cards){
-  if(!srchQ) return cards;
-  const q=srchQ.toLowerCase();
-  return cards.filter(c=>(c.question||'').toLowerCase().includes(q)||(c.answer||'').toLowerCase().includes(q));
-}
-
 function render(cards){
-  const filtered = filter(cards);
   const bc = isMainFeed ? ['כל השאלות — דף ראשי'] : getBc();
   let h = '<div class="rh">';
   h += '<div class="rh-left"><h2>'+(bc[bc.length-1]||'תוצאות')+'</h2>';
-  h += '<span class="cnt">'+filtered.length.toLocaleString()+' שאלות</span>';
+  h += '<span class="cnt">'+cards.length.toLocaleString()+' שאלות</span>';
   if(!isMainFeed){
     h += '<div class="mode-toggle" style="margin-right:6px">';
     h += '<button class="mode-btn'+(pageMode===25?' on':'')+'" onclick="setMode(25)">25 שאלות</button>';
@@ -449,16 +470,28 @@ function render(cards){
   }
   h += '</div>';
 
-  if(!filtered.length){
+  // Search info bar
+  if(srchQ){
+    h += '<div class="srch-bar">חיפוש: <b>'+esc(srchQ)+'</b> — '+cards.length.toLocaleString()+' תוצאות <button onclick="clearSearch()">נקה חיפוש</button></div>';
+  }
+
+  if(!cards.length){
     h += '<div class="empty-s"><div class="empty-ico">🔍</div><h3>לא נמצאו שאלות תואמות</h3></div>';
   } else {
     h += '<div class="grid">';
-    filtered.forEach((item,i)=>{
+    cards.forEach((item,i)=>{
       const dt = (item.questionDate||item.publishedAt||'').slice(0,10)||'—';
+      const qid = item.qid||item.id;
+      // encode data for share button (escape quotes)
+      const qEnc = encodeURIComponent(item.question||'');
+      const aEnc = encodeURIComponent(item.answer||'');
       h += '<div class="card" style="animation-delay:'+Math.min(i*25,400)+'ms">';
       h += '<div class="card-top">';
-      h += '<span class="num"># '+(item.qid||item.id)+'</span>';
+      h += '<span class="num"># '+qid+'</span>';
+      h += '<div style="display:flex;align-items:center;gap:8px">';
       h += '<span class="dt">📅 '+dt+'</span>';
+      h += '<button class="btn-share" onclick="shareQA('+qid+',decodeURIComponent(\''+qEnc+'\'),decodeURIComponent(\''+aEnc+'\'),\''+dt+'\')">📤 שתף</button>';
+      h += '</div>';
       h += '</div><div class="card-body">';
       h += '<div class="sec-q"><div class="sec-lbl">שאלה</div><div class="sec-txt">'+hl(item.question,srchQ)+'</div></div>';
       h += '<div class="sec-a"><div class="sec-lbl">תשובה</div><div class="sec-txt">'+hl(item.answer,srchQ)+'</div></div>';
@@ -466,15 +499,118 @@ function render(cards){
     });
     h += '</div>';
 
-    if(!srchQ){
-      if(loaded.length < total){
-        h += '<div class="lm-wrap"><button class="btn-lm" onclick="loadMore()">⬇ טען עוד ('+(total-loaded.length).toLocaleString()+' נוספות)</button></div>';
-      } else {
-        h += '<div class="all-done">✅ כל '+total.toLocaleString()+' השאלות נטענו</div>';
-      }
+    if(loaded.length < total){
+      h += '<div class="lm-wrap"><button class="btn-lm" onclick="loadMore()">⬇ טען עוד ('+(total-loaded.length).toLocaleString()+' נוספות)</button></div>';
+    } else {
+      h += '<div class="all-done">✅ כל '+total.toLocaleString()+' השאלות נטענו</div>';
     }
   }
   document.getElementById('results').innerHTML = h;
+}
+
+/* ── SHARE Q&A ─────────────────────────────────────────────── */
+function wrapText(ctx, text, maxWidth){
+  const words = (text||'').split(' ');
+  const lines = []; let line = '';
+  for(const word of words){
+    const test = line ? line+' '+word : word;
+    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line=word; }
+    else line=test;
+  }
+  if(line) lines.push(line);
+  return lines;
+}
+
+async function shareQA(qid, question, answer, date){
+  const W=800, PAD=40, LH=28, FONT='18px "Segoe UI", Arial';
+  const ctx2 = document.createElement('canvas').getContext('2d');
+  ctx2.font = FONT;
+  const textW = W - PAD*2 - 14;
+  const qLines = wrapText(ctx2, question||'', textW);
+  const aLines = wrapText(ctx2, answer||'',   textW);
+  const H = 90 + (qLines.length+aLines.length)*LH + 130;
+
+  const canvas = document.createElement('canvas');
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle='#1a2235';
+  ctx.fillRect(0,0,W,H);
+
+  // Header bar
+  const hg=ctx.createLinearGradient(0,0,W,0);
+  hg.addColorStop(0,'#0d1b3e'); hg.addColorStop(1,'#1a0a3e');
+  ctx.fillStyle=hg; ctx.fillRect(0,0,W,56);
+
+  // Num badge
+  const bg2=ctx.createLinearGradient(0,0,100,0);
+  bg2.addColorStop(0,'#4f8ef7'); bg2.addColorStop(1,'#7c5cf7');
+  ctx.fillStyle=bg2;
+  roundRect(ctx, W-PAD-90, 14, 90, 28, 8); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='bold 14px "Segoe UI",Arial';
+  ctx.direction='rtl'; ctx.textAlign='right';
+  ctx.fillText('# '+qid, W-PAD-6, 33);
+
+  // Date
+  ctx.fillStyle='#8892a4'; ctx.font='13px "Segoe UI",Arial';
+  ctx.textAlign='left'; ctx.direction='ltr';
+  ctx.fillText('📅 '+date, PAD, 33);
+
+  // Question section
+  let y=70;
+  ctx.fillStyle='#1a2540';
+  roundRect(ctx,PAD,y,W-PAD*2,qLines.length*LH+30,12); ctx.fill();
+  ctx.fillStyle='#4f8ef7';
+  ctx.fillRect(W-PAD-6,y,6,qLines.length*LH+30);
+  ctx.fillStyle='#4f8ef7'; ctx.font='bold 12px "Segoe UI",Arial';
+  ctx.textAlign='right'; ctx.direction='rtl';
+  ctx.fillText('שאלה', W-PAD-14, y+18);
+  ctx.fillStyle='#e8eaf6'; ctx.font=FONT;
+  qLines.forEach((l,i)=>ctx.fillText(l, W-PAD-14, y+36+i*LH));
+  y += qLines.length*LH+46;
+
+  // Answer section
+  ctx.fillStyle='#16221a';
+  roundRect(ctx,PAD,y,W-PAD*2,aLines.length*LH+30,12); ctx.fill();
+  ctx.fillStyle='#2e7d52';
+  ctx.fillRect(W-PAD-6,y,6,aLines.length*LH+30);
+  ctx.fillStyle='#4caf84'; ctx.font='bold 12px "Segoe UI",Arial';
+  ctx.textAlign='right'; ctx.direction='rtl';
+  ctx.fillText('תשובה', W-PAD-14, y+18);
+  ctx.fillStyle='#e8eaf6'; ctx.font=FONT;
+  aLines.forEach((l,i)=>ctx.fillText(l, W-PAD-14, y+36+i*LH));
+  y += aLines.length*LH+46;
+
+  // Footer
+  ctx.fillStyle='#0d1b3e'; ctx.fillRect(0,H-44,W,44);
+  ctx.fillStyle='#8892a4'; ctx.font='13px "Segoe UI",Arial';
+  ctx.textAlign='center'; ctx.direction='ltr';
+  ctx.fillText('שאלות ותשובות | דרך צדיקים', W/2, H-16);
+
+  // Share
+  canvas.toBlob(async blob=>{
+    const file = new File([blob],'qa-'+qid+'.png',{type:'image/png'});
+    try{
+      if(navigator.share && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:'שאלה ותשובה #'+qid});
+      } else { throw new Error('no share'); }
+    } catch(e){
+      // Fallback: WhatsApp text
+      const txt = 'שאלה מספר '+qid+'\n\nשאלה:\n'+question+'\n\nתשובה:\n'+answer+'\n\n(דרך צדיקים)';
+      window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+    }
+  },'image/png');
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
 }
 
 async function loadMore(){
@@ -492,31 +628,17 @@ function clearAll(){
   CATS.forEach(c=>{ const o=new Option(c.title,c.name); document.getElementById('sel-main').add(o); });
   hide('sec-sub'); hide('sec-subsub');
   document.getElementById('srch').value='';
+  document.getElementById('srch-clear').classList.add('hidden');
   document.getElementById('btn-all-qs').classList.remove('active');
+  // Re-enable "כל השאלות" mode button
+  document.getElementById('mode-all').disabled = false;
+  document.getElementById('mode-all').title = '';
   setBtn(false);
   show('welcome'); hide('results');
   document.getElementById('hdr-total').textContent='—';
   document.getElementById('hdr-loaded-wrap').classList.add('hidden');
   catName=''; loaded=[]; srchQ=''; offset=0; total=0; isMainFeed=false;
   setMode(25);
-}
-</script>
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js')
-      .then(r=>console.log('SW registered'))
-      .catch(e=>console.log('SW error', e));
-  });
-}
-</script>
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js')
-      .then(r=>console.log('SW registered'))
-      .catch(e=>console.log('SW error', e));
-  });
 }
 </script>
 </body>
