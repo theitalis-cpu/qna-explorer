@@ -509,26 +509,41 @@ function render(cards){
 }
 
 /* ── SHARE Q&A ─────────────────────────────────────────────── */
+
+// Wrap text respecting \n paragraph breaks
 function wrapText(ctx, text, maxWidth){
-  const words = (text||'').split(' ');
-  const lines = []; let line = '';
-  for(const word of words){
-    const test = line ? line+' '+word : word;
-    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line=word; }
-    else line=test;
+  const paras = (text||'').split('\n');
+  const lines = [];
+  for(const para of paras){
+    if(!para.trim()){ lines.push(''); continue; }
+    const words = para.split(' ');
+    let line = '';
+    for(const word of words){
+      const test = line ? line+' '+word : word;
+      if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line=word; }
+      else line=test;
+    }
+    if(line) lines.push(line);
   }
-  if(line) lines.push(line);
   return lines;
 }
 
 async function shareQA(qid, question, answer, date){
   const W=800, PAD=40, LH=28, FONT='18px "Segoe UI", Arial';
+  const MAX_A_LINES = 35;   // cap answer lines so image stays shareable
+
   const ctx2 = document.createElement('canvas').getContext('2d');
   ctx2.font = FONT;
   const textW = W - PAD*2 - 14;
   const qLines = wrapText(ctx2, question||'', textW);
-  const aLines = wrapText(ctx2, answer||'',   textW);
-  const H = 90 + (qLines.length+aLines.length)*LH + 130;
+  const aLinesAll = wrapText(ctx2, answer||'', textW);
+
+  // Truncate answer if too long
+  const truncated = aLinesAll.length > MAX_A_LINES;
+  const aLines = truncated ? aLinesAll.slice(0, MAX_A_LINES) : aLinesAll;
+  const truncNote = truncated ? 1 : 0;   // extra line for "..." note
+
+  const H = 90 + (qLines.length + aLines.length + truncNote)*LH + 130;
 
   const canvas = document.createElement('canvas');
   canvas.width=W; canvas.height=H;
@@ -555,7 +570,7 @@ async function shareQA(qid, question, answer, date){
   // Date
   ctx.fillStyle='#8892a4'; ctx.font='13px "Segoe UI",Arial';
   ctx.textAlign='left'; ctx.direction='ltr';
-  ctx.fillText('📅 '+date, PAD, 33);
+  ctx.fillText(date, PAD, 33);
 
   // Question section
   let y=70;
@@ -570,17 +585,22 @@ async function shareQA(qid, question, answer, date){
   qLines.forEach((l,i)=>ctx.fillText(l, W-PAD-14, y+36+i*LH));
   y += qLines.length*LH+46;
 
-  // Answer section
+  // Answer section (possibly truncated)
+  const aBoxH = (aLines.length + truncNote)*LH + 30;
   ctx.fillStyle='#16221a';
-  roundRect(ctx,PAD,y,W-PAD*2,aLines.length*LH+30,12); ctx.fill();
+  roundRect(ctx,PAD,y,W-PAD*2,aBoxH,12); ctx.fill();
   ctx.fillStyle='#2e7d52';
-  ctx.fillRect(W-PAD-6,y,6,aLines.length*LH+30);
+  ctx.fillRect(W-PAD-6,y,6,aBoxH);
   ctx.fillStyle='#4caf84'; ctx.font='bold 12px "Segoe UI",Arial';
   ctx.textAlign='right'; ctx.direction='rtl';
   ctx.fillText('תשובה', W-PAD-14, y+18);
   ctx.fillStyle='#e8eaf6'; ctx.font=FONT;
   aLines.forEach((l,i)=>ctx.fillText(l, W-PAD-14, y+36+i*LH));
-  y += aLines.length*LH+46;
+  if(truncated){
+    ctx.fillStyle='#8892a4'; ctx.font='italic 14px "Segoe UI",Arial';
+    ctx.fillText('... (התשובה ממשיכה — לתשובה המלאה ראה בוואטסאפ)', W-PAD-14, y+36+aLines.length*LH);
+  }
+  y += aBoxH+46;
 
   // Footer
   ctx.fillStyle='#0d1b3e'; ctx.fillRect(0,H-44,W,44);
@@ -591,13 +611,16 @@ async function shareQA(qid, question, answer, date){
   // Share
   canvas.toBlob(async blob=>{
     const file = new File([blob],'qa-'+qid+'.png',{type:'image/png'});
+    // WhatsApp fallback text (always prepare it, truncate if too long)
+    const MAX_WA = 1500;
+    const answerWa = answer.length > MAX_WA ? answer.slice(0, MAX_WA)+'...' : answer;
+    const txt = 'שאלה מספר '+qid+'\n\nשאלה:\n'+question+'\n\nתשובה:\n'+answerWa+'\n\n— דרך צדיקים';
     try{
       if(navigator.share && navigator.canShare({files:[file]})){
-        await navigator.share({files:[file], title:'שאלה ותשובה #'+qid});
+        await navigator.share({files:[file], title:'שאלה ותשובה #'+qid,
+          text: truncated ? txt : undefined});
       } else { throw new Error('no share'); }
     } catch(e){
-      // Fallback: WhatsApp text
-      const txt = 'שאלה מספר '+qid+'\n\nשאלה:\n'+question+'\n\nתשובה:\n'+answer+'\n\n(דרך צדיקים)';
       window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
     }
   },'image/png');
