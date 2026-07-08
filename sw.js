@@ -1,7 +1,8 @@
-const CACHE = 'qna-v1';
+const CACHE = 'qna-v2';
 const ASSETS = [
   '/qna-explorer/',
   '/qna-explorer/index.html',
+  '/qna-explorer/qna_data.json',
   '/qna-explorer/manifest.json',
   '/qna-explorer/icon-192.png',
   '/qna-explorer/icon-512.png'
@@ -20,9 +21,5 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // For API calls — always go network
-  if (e.request.url.includes('search.sbms.io')) return;
-  e.respondWith(
-    fetch(e.request).catch(() => caches.match(e.request))
-  );
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
