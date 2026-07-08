@@ -2,500 +2,146 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1b3e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="שו&quot;ת">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>שאלות ותשובות | דרך צדיקים</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
 :root {
-  --bg:       #020917;
-  --surface:  #050d1e;
-  --card:     rgba(9,18,42,0.9);
-  --card-hover: rgba(13,25,56,0.95);
-  --accent:   #4a9eff;
-  --accent2:  #7c5cf7;
-  --gold:     #f0a830;
-  --emerald:  #10b981;
-  --text:     #e8eef8;
-  --text-muted: #4e6285;
-  --border:   rgba(74,158,255,0.11);
-  --border-hi: rgba(74,158,255,0.28);
-  --q-bg:     rgba(59,125,219,0.07);
-  --a-bg:     rgba(14,165,113,0.06);
-  --q-border: #3b7ddb;
-  --a-border: #0ea571;
-  --radius:   18px;
-  --radius-sm:10px;
-  --shadow:   0 8px 40px rgba(0,0,0,.6);
-  --glow:     0 0 28px rgba(74,158,255,.14);
+  --bg:#0b0f1a; --surface:#131929; --card:#1a2235; --card-hover:#1f2a42;
+  --accent:#4f8ef7; --accent2:#7c5cf7; --gold:#f0c060;
+  --text:#e8eaf6; --text-muted:#8892a4; --border:#2a3550;
+  --q-bg:#1a2540; --a-bg:#16221a; --a-border:#2e7d52; --q-border:#2e4a8a;
+  --tag-bg:#1e2d4a; --shadow:0 8px 32px rgba(0,0,0,.4); --radius:16px;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Arial Hebrew",Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+header{background:linear-gradient(135deg,#0d1b3e 0%,#1a0a3e 50%,#0d2240 100%);border-bottom:1px solid var(--border);padding:0 32px;height:72px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 30px rgba(0,0,0,.5)}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 20px rgba(79,142,247,.4)}
+.logo-name{font-size:20px;font-weight:700}
+.logo-sub{font-size:12px;color:var(--text-muted);margin-top:1px}
+.hdr-stats{display:flex;gap:16px;align-items:center}
+.badge{background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.25);border-radius:20px;padding:5px 14px;font-size:13px;color:var(--accent);display:flex;align-items:center;gap:6px}
+.badge b{color:#fff}
 
-body {
-  font-family: 'Heebo', 'Arial Hebrew', Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  direction: rtl;
-  overflow-x: hidden;
-}
+.layout{display:flex;min-height:calc(100vh - 72px)}
 
-/* Ambient orbs */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 55% 45% at 15%  8%, rgba(74,158,255,.06) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 55% at 85% 85%, rgba(124,92,247,.05) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 50% at 60% 35%, rgba(16,185,129,.03) 0%, transparent 65%);
-}
+.sidebar{width:300px;min-width:260px;background:var(--surface);border-left:1px solid var(--border);padding:24px 18px;position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column;gap:18px}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-/* Subtle grid */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(74,158,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74,158,255,.025) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);font-weight:600;padding-right:2px;margin-bottom:4px}
+.sel-wrap{position:relative}
+.sel-wrap select{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:11px 14px;font-size:14px;font-family:inherit;direction:rtl;cursor:pointer;appearance:none;outline:none;transition:border-color .2s,box-shadow .2s}
+.sel-wrap select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,142,247,.15)}
+.sel-wrap select:disabled{opacity:.4;cursor:not-allowed}
+.sel-wrap::after{content:"▾";position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;font-size:12px}
+.sel-wrap select option{background:#1a2235;color:var(--text)}
 
-/* ── HEADER ─────────────────────────────────────────── */
-header {
-  position: sticky; top: 0; z-index: 200;
-  height: 66px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 28px;
-  background: rgba(2,9,23,.88);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 0 rgba(74,158,255,.07), 0 4px 28px rgba(0,0,0,.45);
-}
+.srch{position:relative}
+.srch input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:11px 14px 11px 38px;font-size:14px;font-family:inherit;direction:rtl;outline:none;transition:border-color .2s,box-shadow .2s}
+.srch input::placeholder{color:var(--text-muted)}
+.srch input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,142,247,.15)}
+.srch-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
 
-.logo { display: flex; align-items: center; gap: 14px; }
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;padding:13px 20px;font-size:15px;font-family:inherit;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s,box-shadow .2s;box-shadow:0 4px 20px rgba(79,142,247,.35)}
+.btn-primary:hover{opacity:.92;box-shadow:0 6px 28px rgba(79,142,247,.5)}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed}
+.btn-sec{width:100%;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--text-muted);padding:10px 20px;font-size:13px;font-family:inherit;cursor:pointer;transition:border-color .2s,color .2s}
+.btn-sec:hover{border-color:var(--text-muted);color:var(--text)}
 
-.logo-icon {
-  width: 42px; height: 42px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 21px;
-  box-shadow: 0 0 22px rgba(74,158,255,.35), 0 0 0 1px rgba(74,158,255,.18);
-  position: relative; overflow: hidden;
-  flex-shrink: 0;
-}
-.logo-icon::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,.16) 0%, transparent 60%);
-}
+.hr{height:1px;background:var(--border);margin:2px 0}
+.tip{background:rgba(79,142,247,.07);border:1px solid rgba(79,142,247,.18);border-radius:12px;padding:14px;font-size:13px;color:var(--text-muted);line-height:1.65}
+.tip b{color:var(--accent)}
 
-.logo-name {
-  font-family: 'Frank Ruhl Libre', Georgia, serif;
-  font-size: 19px; font-weight: 700; letter-spacing: .3px;
-}
-.logo-sub {
-  font-size: 11px; color: var(--text-muted);
-  margin-top: 1px; letter-spacing: .5px;
-}
+.main{flex:1;padding:32px 36px;overflow-y:auto;min-width:0}
 
-.hdr-stats { display: flex; gap: 10px; align-items: center; }
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;gap:18px;animation:fadeIn .5s ease}
+.welcome-ico{font-size:68px;filter:drop-shadow(0 0 30px rgba(79,142,247,.5))}
+.welcome h2{font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.welcome p{font-size:16px;color:var(--text-muted);max-width:400px;line-height:1.75}
 
-.badge {
-  display: flex; align-items: center; gap: 8px;
-  background: rgba(74,158,255,.07);
-  border: 1px solid rgba(74,158,255,.18);
-  border-radius: 50px;
-  padding: 5px 14px;
-  font-size: 12px; color: rgba(135,185,255,.9); font-weight: 500;
-}
-.badge b { color: #fff; font-weight: 600; }
-.badge .dot {
-  width: 6px; height: 6px;
-  background: var(--accent); border-radius: 50%;
-  box-shadow: 0 0 7px var(--accent);
-  animation: blink 2.4s ease-in-out infinite;
-  flex-shrink: 0;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+.rh-left{display:flex;align-items:center;gap:10px}
+.rh-left h2{font-size:20px;font-weight:700}
+.cnt{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;color:#fff}
+.bc{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);flex-wrap:wrap}
+.bc-sep{color:var(--border)}
+.bc-item{background:var(--tag-bg);border:1px solid var(--border);border-radius:8px;padding:3px 10px;color:var(--text)}
 
-/* ── LAYOUT ─────────────────────────────────────────── */
-.layout {
-  display: flex;
-  min-height: calc(100vh - 66px);
-  position: relative; z-index: 1;
-}
+.grid{display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s;animation:slideUp .3s ease both;box-shadow:var(--shadow)}
+.card:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(0,0,0,.5);border-color:rgba(79,142,247,.3)}
+.card-top{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+.num{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;padding:4px 12px;font-size:13px;font-weight:700;color:#fff;letter-spacing:.5px}
+.dt{font-size:12px;color:var(--text-muted);background:var(--tag-bg);border:1px solid var(--border);border-radius:8px;padding:3px 10px}
+.card-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.sec-q{background:var(--q-bg);border-right:4px solid var(--accent);border-radius:12px;padding:15px 16px}
+.sec-a{background:var(--a-bg);border-right:4px solid var(--a-border);border-radius:12px;padding:15px 16px}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:7px;text-transform:uppercase}
+.sec-q .sec-lbl{color:var(--accent)}
+.sec-a .sec-lbl{color:#4caf84}
+.sec-txt{font-size:15px;line-height:1.75;color:var(--text);white-space:pre-wrap;word-break:break-word}
 
-/* ── SIDEBAR ────────────────────────────────────────── */
-.sidebar {
-  width: 286px; min-width: 260px;
-  background: rgba(3,8,22,.82);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-left: 1px solid var(--border);
-  padding: 18px 14px;
-  position: sticky; top: 66px;
-  height: calc(100vh - 66px);
-  overflow-y: auto; flex-shrink: 0;
-  display: flex; flex-direction: column; gap: 12px;
-}
-.sidebar::-webkit-scrollbar { width: 3px; }
-.sidebar::-webkit-scrollbar-thumb { background: rgba(74,158,255,.18); border-radius: 3px; }
+.lm-wrap{display:flex;justify-content:center;margin-top:28px;margin-bottom:12px}
+.btn-lm{background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--accent);padding:13px 38px;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s;box-shadow:var(--shadow)}
+.btn-lm:hover{background:var(--card-hover);border-color:var(--accent);box-shadow:0 0 20px rgba(79,142,247,.2)}
+.btn-lm:disabled{opacity:.4;cursor:not-allowed}
+.all-done{text-align:center;color:var(--text-muted);font-size:13px;margin-top:24px;padding:14px;background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.15);border-radius:12px}
 
-/* sidebar elements */
-.lbl {
-  font-size: 10px; text-transform: uppercase;
-  letter-spacing: 2px; color: var(--text-muted);
-  font-weight: 600; margin-bottom: 5px; padding-right: 1px;
-}
+/* All Q&As button */
+.btn-all-qs{width:100%;background:linear-gradient(135deg,#1a3a1a,#1e2d1e);border:1px solid #2e7d52;border-radius:12px;color:#4caf84;padding:13px 16px;font-size:14px;font-family:inherit;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-all-qs:hover{background:linear-gradient(135deg,#1f4a1f,#243524);border-color:#4caf84;box-shadow:0 0 20px rgba(76,175,132,.2)}
+.btn-all-qs.active{background:linear-gradient(135deg,#1f4a1f,#243524);border-color:#4caf84;box-shadow:0 0 16px rgba(76,175,132,.25);color:#6fcfa0}
 
-.sel-wrap { position: relative; }
-.sel-wrap select {
-  width: 100%;
-  background: rgba(9,18,42,.85);
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  color: var(--text);
-  padding: 10px 13px;
-  font-size: 14px; font-family: 'Heebo', inherit;
-  direction: rtl; cursor: pointer; appearance: none; outline: none;
-  transition: border-color .2s, box-shadow .2s, background .2s;
-}
-.sel-wrap select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(74,158,255,.1), var(--glow);
-  background: rgba(12,24,52,.9);
-}
-.sel-wrap select:disabled { opacity: .35; cursor: not-allowed; }
-.sel-wrap::after {
-  content: "▾"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-  color: var(--text-muted); pointer-events: none; font-size: 11px;
-}
-.sel-wrap select option { background: #0c1628; color: var(--text); }
+/* Load mode toggle */
+.mode-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+.mode-btn{flex:1;padding:7px 10px;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--text-muted)}
+.mode-btn.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 2px 10px rgba(79,142,247,.35)}
+.mode-btn:hover:not(.on){color:var(--text);background:rgba(255,255,255,.05)}
 
-.srch { position: relative; }
-.srch input {
-  width: 100%;
-  background: rgba(9,18,42,.85);
-  border: 1px solid var(--border); border-radius: 11px;
-  color: var(--text); padding: 10px 13px 10px 40px;
-  font-size: 14px; font-family: 'Heebo', inherit;
-  direction: rtl; outline: none;
-  transition: border-color .2s, box-shadow .2s, background .2s;
-}
-.srch input::placeholder { color: var(--text-muted); }
-.srch input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(74,158,255,.1);
-  background: rgba(12,24,52,.9);
-}
-.srch-ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 13px; }
-.srch-clear {
-  position: absolute; left: 38px; top: 50%; transform: translateY(-50%);
-  background: none; border: none; color: var(--text-muted); cursor: pointer;
-  font-size: 14px; padding: 0; line-height: 1; transition: color .2s;
-}
-.srch-clear:hover { color: var(--text); }
+/* Progress bar */
+.prog-wrap{margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.prog-bar-bg{width:100%;max-width:400px;height:6px;background:var(--border);border-radius:6px;overflow:hidden}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:6px;transition:width .3s}
+.prog-text{font-size:13px;color:var(--text-muted)}
 
-.btn-primary {
-  width: 100%;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-  border: none; border-radius: 11px;
-  color: #fff; padding: 12px 20px;
-  font-size: 14px; font-family: 'Heebo', inherit; font-weight: 700;
-  cursor: pointer; letter-spacing: .3px;
-  transition: opacity .2s, transform .15s, box-shadow .2s;
-  box-shadow: 0 4px 22px rgba(74,158,255,.28), 0 0 0 1px rgba(74,158,255,.1);
-  position: relative; overflow: hidden;
-}
-.btn-primary::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,.12), transparent);
-  opacity: 0; transition: opacity .2s;
-}
-.btn-primary:hover::before { opacity: 1; }
-.btn-primary:hover { box-shadow: 0 6px 30px rgba(74,158,255,.42); }
-.btn-primary:active { transform: scale(.98); }
-.btn-primary:disabled { opacity: .28; cursor: not-allowed; }
+/* Search clear button */
+.srch-clear{position:absolute;left:38px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:15px;padding:0;line-height:1;transition:color .2s}
+.srch-clear:hover{color:var(--text)}
 
-.btn-sec {
-  width: 100%;
-  background: transparent;
-  border: 1px solid var(--border); border-radius: 11px;
-  color: var(--text-muted); padding: 10px 20px;
-  font-size: 13px; font-family: 'Heebo', inherit; cursor: pointer;
-  transition: border-color .2s, color .2s, background .2s;
-}
-.btn-sec:hover { border-color: rgba(74,158,255,.28); color: var(--text); background: rgba(74,158,255,.04); }
+/* Share button */
+.btn-share{background:linear-gradient(135deg,#1a3a1a,#1e2d1e);border:1px solid #2e7d52;border-radius:8px;color:#4caf84;padding:6px 14px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-share:hover{background:linear-gradient(135deg,#1f4a1f,#243524);border-color:#4caf84;box-shadow:0 0 12px rgba(76,175,132,.25)}
 
-.btn-all-qs {
-  width: 100%;
-  background: rgba(16,185,129,.05);
-  border: 1px solid rgba(16,185,129,.2);
-  border-radius: 11px;
-  color: var(--emerald); padding: 12px 14px;
-  font-size: 14px; font-family: 'Heebo', inherit; font-weight: 700;
-  cursor: pointer; letter-spacing: .2px;
-  transition: all .25s;
-  text-align: center; display: flex; align-items: center; justify-content: center; gap: 7px;
-}
-.btn-all-qs:hover { background: rgba(16,185,129,.09); border-color: rgba(16,185,129,.35); box-shadow: 0 0 22px rgba(16,185,129,.14); }
-.btn-all-qs.active { background: rgba(16,185,129,.11); border-color: rgba(16,185,129,.48); box-shadow: 0 0 22px rgba(16,185,129,.18); }
+/* Search info bar */
+.srch-bar{background:rgba(240,192,96,.08);border:1px solid rgba(240,192,96,.2);border-radius:10px;padding:8px 14px;font-size:13px;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.srch-bar button{background:none;border:none;color:var(--gold);cursor:pointer;font-size:13px;font-family:inherit;text-decoration:underline}
 
-.mode-toggle {
-  display: flex;
-  background: rgba(6,12,30,.9);
-  border: 1px solid var(--border); border-radius: 10px;
-  padding: 3px; gap: 3px;
-}
-.mode-btn {
-  flex: 1; padding: 7px 8px;
-  border: none; border-radius: 7px;
-  font-family: 'Heebo', inherit; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all .2s;
-  background: transparent; color: var(--text-muted);
-}
-.mode-btn.on {
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #fff; box-shadow: 0 2px 14px rgba(74,158,255,.28);
-}
-.mode-btn:hover:not(.on) { color: var(--text); background: rgba(255,255,255,.05); }
-.mode-btn:disabled { opacity: .3; cursor: not-allowed; }
+/* mode-btn disabled */
+.mode-btn:disabled{opacity:.35;cursor:not-allowed}
 
-.hr { height: 1px; background: var(--border); margin: 2px 0; }
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:20px}
+.spin{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+.loader p{color:var(--text-muted);font-size:15px}
+.empty-s{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:14px;text-align:center}
+.empty-ico{font-size:48px;opacity:.4}
+.empty-s h3{font-size:18px;color:var(--text-muted)}
 
-.tip {
-  background: rgba(74,158,255,.04);
-  border: 1px solid rgba(74,158,255,.1); border-radius: 11px;
-  padding: 13px; font-size: 12px; color: var(--text-muted); line-height: 1.75;
-}
-.tip b { color: var(--accent); }
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+mark{background:rgba(240,192,96,.28);color:var(--gold);border-radius:3px;padding:0 2px}
 
-.sec { display: flex; flex-direction: column; gap: 6px; }
-.hidden { display: none !important; }
-
-/* ── MAIN ───────────────────────────────────────────── */
-.main { flex: 1; padding: 32px 40px; overflow-y: auto; min-width: 0; }
-
-/* ── WELCOME ────────────────────────────────────────── */
-.welcome {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; min-height: 64vh;
-  text-align: center; gap: 20px;
-  animation: fadeIn .6s ease;
-}
-.welcome-ico {
-  font-size: 74px;
-  filter: drop-shadow(0 0 38px rgba(74,158,255,.38));
-  animation: float 4s ease-in-out infinite;
-}
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-
-.welcome h2 {
-  font-family: 'Frank Ruhl Libre', Georgia, serif;
-  font-size: 28px; font-weight: 700; line-height: 1.35;
-  background: linear-gradient(135deg, var(--accent) 20%, var(--accent2) 80%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.welcome p { font-size: 15px; color: var(--text-muted); max-width: 370px; line-height: 1.85; }
-
-.welcome-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 480px; }
-.welcome-chip {
-  background: rgba(74,158,255,.07);
-  border: 1px solid rgba(74,158,255,.16);
-  border-radius: 50px; padding: 5px 15px;
-  font-size: 13px; color: rgba(74,158,255,.85);
-  opacity: 0; animation: chipIn .4s ease forwards;
-}
-.welcome-chip:nth-child(1){animation-delay:.1s}
-.welcome-chip:nth-child(2){animation-delay:.2s}
-.welcome-chip:nth-child(3){animation-delay:.3s}
-.welcome-chip:nth-child(4){animation-delay:.4s}
-.welcome-chip:nth-child(5){animation-delay:.5s}
-@keyframes chipIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
-
-/* ── RESULT HEADER ──────────────────────────────────── */
-.rh {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 22px; flex-wrap: wrap; gap: 10px;
-}
-.rh-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.rh-left h2 {
-  font-family: 'Frank Ruhl Libre', Georgia, serif;
-  font-size: 21px; font-weight: 700;
-}
-.cnt {
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius: 50px; padding: 4px 14px;
-  font-size: 12px; font-weight: 700; color: #fff; letter-spacing: .3px;
-}
-.bc { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
-.bc-sep { opacity: .5; }
-.bc-item {
-  background: rgba(74,158,255,.06);
-  border: 1px solid rgba(74,158,255,.14);
-  border-radius: 6px; padding: 3px 10px;
-  color: rgba(74,158,255,.8); font-size: 11px;
-}
-
-.srch-bar {
-  background: rgba(240,168,48,.06);
-  border: 1px solid rgba(240,168,48,.18);
-  border-radius: 10px; padding: 9px 14px;
-  font-size: 13px; color: var(--gold);
-  margin-bottom: 18px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.srch-bar button {
-  background: none; border: none; color: var(--gold);
-  cursor: pointer; font-size: 12px; font-family: inherit;
-  text-decoration: underline; opacity: .8;
-}
-.srch-bar button:hover { opacity: 1; }
-
-/* ── CARDS ──────────────────────────────────────────── */
-.grid { display: flex; flex-direction: column; gap: 15px; }
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border); border-radius: var(--radius);
-  overflow: hidden;
-  transition: transform .26s cubic-bezier(.34,1.56,.64,1), box-shadow .26s, border-color .26s;
-  animation: slideUp .35s ease both;
-  box-shadow: 0 4px 24px rgba(0,0,0,.4), 0 0 0 1px var(--border);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 52px rgba(0,0,0,.5), 0 0 0 1px rgba(74,158,255,.26), 0 0 32px rgba(74,158,255,.07);
-  border-color: rgba(74,158,255,.26);
-}
-
-.card-top {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 11px 18px;
-  background: rgba(255,255,255,.014);
-  border-bottom: 1px solid var(--border);
-}
-.num {
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius: 8px; padding: 4px 12px;
-  font-size: 12px; font-weight: 700; color: #fff; letter-spacing: .4px;
-}
-.dt {
-  font-size: 11px; color: var(--text-muted);
-  background: rgba(255,255,255,.04);
-  border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px;
-}
-
-.card-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 11px; }
-
-.sec-q {
-  background: var(--q-bg);
-  border-right: 3px solid var(--q-border);
-  border-radius: 11px; padding: 13px 15px;
-}
-.sec-a {
-  background: var(--a-bg);
-  border-right: 3px solid var(--a-border);
-  border-radius: 11px; padding: 13px 15px;
-}
-.sec-lbl {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-  margin-bottom: 7px; text-transform: uppercase;
-  display: flex; align-items: center; gap: 6px;
-}
-.sec-lbl::before {
-  content: ''; display: inline-block;
-  width: 5px; height: 5px; border-radius: 50%;
-  background: currentColor; opacity: .7; flex-shrink: 0;
-}
-.sec-q .sec-lbl { color: var(--accent); }
-.sec-a .sec-lbl { color: var(--emerald); }
-
-.sec-txt {
-  font-size: 15px; line-height: 1.82; color: var(--text);
-  white-space: pre-wrap; word-break: break-word;
-}
-
-.btn-share {
-  background: rgba(16,185,129,.07);
-  border: 1px solid rgba(16,185,129,.2);
-  border-radius: 8px; color: var(--emerald);
-  padding: 5px 12px; font-size: 11px;
-  font-family: 'Heebo', inherit; font-weight: 700;
-  cursor: pointer; transition: all .2s;
-  display: flex; align-items: center; gap: 5px;
-  white-space: nowrap; letter-spacing: .2px;
-}
-.btn-share:hover {
-  background: rgba(16,185,129,.13);
-  border-color: rgba(16,185,129,.4);
-  box-shadow: 0 0 16px rgba(16,185,129,.2);
-}
-
-/* ── LOAD MORE / DONE ───────────────────────────────── */
-.lm-wrap { display: flex; justify-content: center; margin-top: 28px; margin-bottom: 12px; }
-.btn-lm {
-  background: rgba(9,18,42,.92);
-  border: 1px solid rgba(74,158,255,.22);
-  border-radius: 12px; color: var(--accent);
-  padding: 13px 44px; font-size: 14px;
-  font-family: 'Heebo', inherit; font-weight: 600;
-  cursor: pointer; letter-spacing: .2px;
-  transition: all .22s;
-  box-shadow: 0 4px 20px rgba(0,0,0,.3);
-}
-.btn-lm:hover {
-  background: rgba(12,24,52,.95);
-  border-color: rgba(74,158,255,.42);
-  box-shadow: 0 0 26px rgba(74,158,255,.14);
-  transform: translateY(-1px);
-}
-.btn-lm:disabled { opacity: .35; cursor: not-allowed; transform: none; }
-
-.all-done {
-  text-align: center; color: var(--text-muted);
-  font-size: 13px; margin-top: 24px; padding: 13px;
-  background: rgba(16,185,129,.04);
-  border: 1px solid rgba(16,185,129,.12); border-radius: 10px;
-}
-
-/* ── PROGRESS ───────────────────────────────────────── */
-.prog-wrap { margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.prog-bar-bg { width: 100%; max-width: 340px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
-.prog-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 4px; transition: width .3s;
-  box-shadow: 0 0 10px rgba(74,158,255,.5);
-}
-.prog-text { font-size: 13px; color: var(--text-muted); }
-
-/* ── LOADER / EMPTY ─────────────────────────────────── */
-.loader { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 40vh; gap: 20px; }
-.spin {
-  width: 42px; height: 42px;
-  border: 2px solid rgba(74,158,255,.14);
-  border-top-color: var(--accent);
-  border-radius: 50%; animation: spin .8s linear infinite;
-  box-shadow: 0 0 22px rgba(74,158,255,.2);
-}
-.loader p { color: var(--text-muted); font-size: 14px; }
-
-.empty-s { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 40vh; gap: 14px; text-align: center; }
-.empty-ico { font-size: 48px; opacity: .3; }
-.empty-s h3 { font-size: 17px; color: var(--text-muted); font-weight: 500; }
-
-mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; padding: 0 2px; }
-
-@keyframes spin    { to{transform:rotate(360deg)} }
-@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
-@keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.sec{display:flex;flex-direction:column;gap:8px}
+.hidden{display:none!important}
 
 @media(max-width:768px){
   .layout{flex-direction:column}
@@ -503,10 +149,7 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
   .main{padding:18px 14px}
   header{padding:0 14px}
   .hdr-stats{display:none}
-  .welcome h2{font-size:22px}
-  .welcome-chips{display:none}
 }
-
 </style>
 </head>
 <body>
@@ -520,8 +163,8 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
     </div>
   </div>
   <div class="hdr-stats">
-    <div class="badge"><span class="dot"></span> סה&quot;כ בנושא: <b id="hdr-total">—</b></div>
-    <div class="badge hidden" id="hdr-loaded-wrap"><span class="dot"></span> נטענו: <b id="hdr-loaded">0</b></div>
+    <div class="badge">📚 סה"כ בנושא: <b id="hdr-total">—</b></div>
+    <div class="badge hidden" id="hdr-loaded-wrap">✅ נטענו: <b id="hdr-loaded">0</b></div>
   </div>
 </header>
 
@@ -535,7 +178,7 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
     <div class="hr"></div>
 
     <div class="sec">
-      <div class="lbl">נושא ראשי</div>
+      <div class="lbl">🔵 נושא ראשי</div>
       <div class="sel-wrap">
         <select id="sel-main" onchange="onMain()">
           <option value="">— בחר נושא ראשי —</option>
@@ -544,7 +187,7 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
     </div>
 
     <div class="sec hidden" id="sec-sub">
-      <div class="lbl">נושא משנה</div>
+      <div class="lbl">🟢 נושא משנה</div>
       <div class="sel-wrap">
         <select id="sel-sub" onchange="onSub()">
           <option value="">— כל הנושא —</option>
@@ -553,7 +196,7 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
     </div>
 
     <div class="sec hidden" id="sec-subsub">
-      <div class="lbl">תת נושא</div>
+      <div class="lbl">🔸 תת תת-נושא</div>
       <div class="sel-wrap">
         <select id="sel-subsub" onchange="onSubSub()">
           <option value="">— כל הנושא —</option>
@@ -564,7 +207,7 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
     <div class="hr"></div>
 
     <div class="sec">
-      <div class="lbl">חיפוש</div>
+      <div class="lbl">🔍 חיפוש בכל השאלות</div>
       <div class="srch">
         <span class="srch-ico">🔍</span>
         <input type="text" id="srch" placeholder="חפש בשאלות ובתשובות..." oninput="onSearch()">
@@ -573,7 +216,7 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
     </div>
 
     <div class="sec">
-      <div class="lbl">אופן טעינה</div>
+      <div class="lbl">⚙️ אופן טעינה</div>
       <div class="mode-toggle">
         <button class="mode-btn on" id="mode-25" onclick="setMode(25)">25 שאלות</button>
         <button class="mode-btn" id="mode-all" onclick="setMode(0)">כל השאלות</button>
@@ -595,15 +238,8 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
   <main class="main">
     <div class="welcome" id="welcome">
       <div class="welcome-ico">📖</div>
-      <h2>ברוכים הבאים לארכיון<br>שאלות ותשובות</h2>
+      <h2>ברוכים הבאים לארכיון שאלות ותשובות</h2>
       <p>בחר נושא מהתפריט בצד ימין כדי לצפות בשאלות ותשובות בנושא הנבחר</p>
-      <div class="welcome-chips">
-        <span class="welcome-chip">מועדים</span>
-        <span class="welcome-chip">שבת</span>
-        <span class="welcome-chip">תפילה וברכות</span>
-        <span class="welcome-chip">כשרות המזון</span>
-        <span class="welcome-chip">אמונה וביטחון</span>
-      </div>
     </div>
     <div id="results" class="hidden"></div>
   </main>
@@ -611,12 +247,13 @@ mark { background: rgba(240,168,48,.2); color: var(--gold); border-radius: 3px; 
 
 <script>
 const CATS = [{"id": 5597, "name": "מועדים", "title": "מועדים", "childs": [{"id": 5620, "name": "מועדיםCCCחנוכה_ופורים", "title": "חנוכה ופורים", "childs": [{"id": 5742, "name": "מועדיםCCCחנוכה_ופוריםCCCתענית_אסתר", "title": "תענית אסתר", "childs": []}, {"id": 5755, "name": "מועדיםCCCחנוכה_ופוריםCCCחנוכה", "title": "חנוכה", "childs": []}, {"id": 5803, "name": "מועדיםCCCחנוכה_ופוריםCCCמגילת_אסתר", "title": "מגילת אסתר", "childs": []}, {"id": 5816, "name": "מועדיםCCCחנוכה_ופוריםCCCארבע_פרשיות", "title": "ארבע פרשיות", "childs": []}, {"id": 5818, "name": "מועדיםCCCחנוכה_ופוריםCCCפורים", "title": "פורים", "childs": []}, {"id": 5875, "name": "מועדיםCCCחנוכה_ופוריםCCCמשלוח_מנות", "title": "משלוח מנות", "childs": []}, {"id": 5879, "name": "מועדיםCCCחנוכה_ופוריםCCCמתנות_לאביונים", "title": "מתנות לאביונים", "childs": []}, {"id": 5881, "name": "מועדיםCCCחנוכה_ופוריםCCCסעודת_פורים", "title": "סעודת פורים", "childs": []}, {"id": 5907, "name": "מועדיםCCCחנוכה_ופוריםCCCטו_בשבט", "title": "טו בשבט", "childs": []}]}, {"id": 5621, "name": "מועדיםCCCימים_נוראים", "title": "ימים נוראים", "childs": [{"id": 5743, "name": "מועדיםCCCימים_נוראיםCCCפדיון_נפש", "title": "פדיון נפש", "childs": []}, {"id": 5752, "name": "מועדיםCCCימים_נוראיםCCCאלול", "title": "אלול", "childs": []}, {"id": 5759, "name": "מועדיםCCCימים_נוראיםCCCעשרת_ימי_תשובה", "title": "עשרת ימי תשובה", "childs": []}, {"id": 5760, "name": "מועדיםCCCימים_נוראיםCCCשבת_תשובה", "title": "שבת תשובה", "childs": []}, {"id": 5777, "name": "מועדיםCCCימים_נוראיםCCCערב_ראש-השנה", "title": "ערב ראש-השנה", "childs": []}, {"id": 5801, "name": "מועדיםCCCימים_נוראיםCCCטבילה", "title": "טבילה", "childs": []}, {"id": 5805, "name": "מועדיםCCCימים_נוראיםCCCתקיעות", "title": "תקיעות", "childs": []}, {"id": 5846, "name": "מועדיםCCCימים_נוראיםCCCסליחות", "title": "סליחות", "childs": []}, {"id": 5888, "name": "מועדיםCCCימים_נוראיםCCCסימני_ראש-השנה", "title": "סימני ראש-השנה", "childs": []}, {"id": 5914, "name": "מועדיםCCCימים_נוראיםCCCהתרת_נדרים", "title": "התרת נדרים", "childs": []}, {"id": 5923, "name": "מועדיםCCCימים_נוראיםCCCמנהגי_יום_ראש-השנה", "title": "מנהגי יום ראש-השנה", "childs": []}, {"id": 5930, "name": "מועדיםCCCימים_נוראיםCCCתענית_ערב_ראש-השנה", "title": "תענית ערב ראש-השנה", "childs": []}]}, {"id": 5626, "name": "מועדיםCCCספירת_העומר", "title": "ספירת העומר", "childs": [{"id": 5748, "name": "מועדיםCCCספירת_העומרCCCמנהגי_הספירה", "title": "מנהגי הספירה", "childs": []}, {"id": 5837, "name": "מועדיםCCCספירת_העומרCCCפסח_שני", "title": "פסח שני", "childs": []}, {"id": 5839, "name": "מועדיםCCCספירת_העומרCCCסגולת_המלח", "title": "סגולת המלח", "childs": []}, {"id": 5867, "name": "מועדיםCCCספירת_העומרCCCספירת_העומר", "title": "ספירת העומר", "childs": []}, {"id": 5900, "name": "מועדיםCCCספירת_העומרCCCלג_בעומר", "title": "לג בעומר", "childs": []}]}, {"id": 5639, "name": "מועדיםCCCבין_המצרים", "title": "בין המצרים", "childs": [{"id": 5756, "name": "מועדיםCCCבין_המצריםCCCיז_בתמוז", "title": "יז בתמוז", "childs": []}, {"id": 5761, "name": "מועדיםCCCבין_המצריםCCCשלושת_השבועות", "title": "שלושת השבועות", "childs": []}, {"id": 5817, "name": "מועדיםCCCבין_המצריםCCCשבוע_שחל_בו", "title": "שבוע שחל בו", "childs": []}, {"id": 5825, "name": "מועדיםCCCבין_המצריםCCCתשעה_באב", "title": "תשעה באב", "childs": []}]}, {"id": 5646, "name": "מועדיםCCCיום_הכיפורים", "title": "יום הכיפורים", "childs": [{"id": 5765, "name": "מועדיםCCCיום_הכיפוריםCCCערב_יום_הכיפורים", "title": "ערב יום הכיפורים", "childs": []}, {"id": 5779, "name": "מועדיםCCCיום_הכיפוריםCCCמחילה_ותשובה", "title": "מחילה ותשובה", "childs": []}, {"id": 5804, "name": "מועדיםCCCיום_הכיפוריםCCCחמישה_עינויים", "title": "חמישה עינויים", "childs": []}, {"id": 5840, "name": "מועדיםCCCיום_הכיפוריםCCCחולים", "title": "חולים", "childs": []}, {"id": 5842, "name": "מועדיםCCCיום_הכיפוריםCCCכפרות", "title": "כפרות", "childs": []}, {"id": 5851, "name": "מועדיםCCCיום_הכיפוריםCCCמעוברות_ומניקות", "title": "מעוברות ומניקות", "childs": []}]}, {"id": 5649, "name": "מועדיםCCCסוכות_ושמחת_תורה", "title": "סוכות ושמחת תורה", "childs": [{"id": 5769, "name": "מועדיםCCCסוכות_ושמחת_תורהCCCארבעת_המינים", "title": "ארבעת המינים", "childs": []}, {"id": 5892, "name": "מועדיםCCCסוכות_ושמחת_תורהCCCסוכות", "title": "סוכות", "childs": []}, {"id": 5924, "name": "מועדיםCCCסוכות_ושמחת_תורהCCCבניית_הסוכה", "title": "בניית הסוכה", "childs": []}, {"id": 5926, "name": "מועדיםCCCסוכות_ושמחת_תורהCCCשמחת_תורה", "title": "שמחת תורה", "childs": []}]}, {"id": 5653, "name": "מועדיםCCCפסח", "title": "פסח", "childs": [{"id": 5770, "name": "מועדיםCCCפסחCCCכללי", "title": "כללי", "childs": []}, {"id": 5778, "name": "מועדיםCCCפסחCCCתענית_בכורות", "title": "תענית בכורות", "childs": []}, {"id": 5785, "name": "מועדיםCCCפסחCCCתערובת_חמץ", "title": "תערובת חמץ", "childs": []}, {"id": 5799, "name": "מועדיםCCCפסחCCCשביעי_של_פסח", "title": "שביעי של פסח", "childs": []}, {"id": 5813, "name": "מועדיםCCCפסחCCCברכת_האילנות", "title": "ברכת האילנות", "childs": []}, {"id": 5819, "name": "מועדיםCCCפסחCCCמצרכים_לפסח", "title": "מצרכים לפסח", "childs": []}, {"id": 5830, "name": "מועדיםCCCפסחCCCניקיון_לפסח", "title": "ניקיון לפסח", "childs": []}, {"id": 5841, "name": "מועדיםCCCפסחCCCערב_פסח", "title": "ערב פסח", "childs": []}, {"id": 5849, "name": "מועדיםCCCפסחCCCהכשרת_כלים", "title": "הכשרת כלים", "childs": []}, {"id": 5857, "name": "מועדיםCCCפסחCCCמוצאי_פסח", "title": "מוצאי פסח", "childs": []}, {"id": 5860, "name": "מועדיםCCCפסחCCCבדיקה_ושריפת_חמץ", "title": "בדיקה ושריפת חמץ", "childs": []}, {"id": 5870, "name": "מועדיםCCCפסחCCCחודש_ניסן", "title": "חודש ניסן", "childs": []}, {"id": 5872, "name": "מועדיםCCCפסחCCCליל_הסדר", "title": "ליל הסדר", "childs": []}, {"id": 5878, "name": "מועדיםCCCפסחCCCשבת_הגדול", "title": "שבת הגדול", "childs": []}, {"id": 5915, "name": "מועדיםCCCפסחCCCמכירת_חמץ", "title": "מכירת חמץ", "childs": []}]}, {"id": 5669, "name": "מועדיםCCCיום_טוב_וחול_המועד", "title": "יום טוב וחול המועד", "childs": [{"id": 5786, "name": "מועדיםCCCיום_טוב_וחול_המועדCCCתפילות", "title": "תפילות", "childs": []}, {"id": 5792, "name": "מועדיםCCCיום_טוב_וחול_המועדCCCמלאכות", "title": "מלאכות", "childs": []}, {"id": 5831, "name": "מועדיםCCCיום_טוב_וחול_המועדCCCחול_המועד", "title": "חול המועד", "childs": []}, {"id": 5859, "name": "מועדיםCCCיום_טוב_וחול_המועדCCCאיסרו_חג", "title": "איסרו חג", "childs": []}, {"id": 5919, "name": "מועדיםCCCיום_טוב_וחול_המועדCCCיום_טוב", "title": "יום טוב", "childs": []}]}, {"id": 5677, "name": "מועדיםCCCתעניות", "title": "תעניות", "childs": []}, {"id": 5679, "name": "מועדיםCCCראש_חודש", "title": "ראש חודש", "childs": [{"id": 5798, "name": "מועדיםCCCראש_חודשCCCברכת_הלבנה", "title": "ברכת הלבנה", "childs": []}, {"id": 5853, "name": "מועדיםCCCראש_חודשCCCתענית_ערב_ראש-חודש", "title": "תענית ערב ראש-חודש", "childs": []}, {"id": 5891, "name": "מועדיםCCCראש_חודשCCCראש-חודש", "title": "ראש-חודש", "childs": []}, {"id": 5898, "name": "מועדיםCCCראש_חודשCCCערב_ראש-חודש", "title": "ערב ראש-חודש", "childs": []}, {"id": 5921, "name": "מועדיםCCCראש_חודשCCCזמן_המולד", "title": "זמן המולד", "childs": []}]}, {"id": 5715, "name": "מועדיםCCCשבועות", "title": "שבועות", "childs": []}]}, {"id": 5598, "name": "שבת", "title": "שבת", "childs": [{"id": 5622, "name": "שבתCCCמוצאי_שבת", "title": "מוצאי שבת", "childs": [{"id": 5744, "name": "שבתCCCמוצאי_שבתCCCסעודה_רביעית", "title": "סעודה רביעית", "childs": []}, {"id": 5796, "name": "שבתCCCמוצאי_שבתCCCסגולות_ושמירות", "title": "סגולות ושמירות", "childs": []}, {"id": 5868, "name": "שבתCCCמוצאי_שבתCCCהבדלה", "title": "הבדלה", "childs": []}, {"id": 5928, "name": "שבתCCCמוצאי_שבתCCCצאת_שבת", "title": "צאת שבת", "childs": []}]}, {"id": 5624, "name": "שבתCCCתפילות_שבת", "title": "תפילות שבת", "childs": [{"id": 5746, "name": "שבתCCCתפילות_שבתCCCמוסף", "title": "מוסף", "childs": []}, {"id": 5820, "name": "שבתCCCתפילות_שבתCCCמנחה_ערב_שבת", "title": "מנחה ערב שבת", "childs": []}, {"id": 5847, "name": "שבתCCCתפילות_שבתCCCהפטרה", "title": "הפטרה", "childs": []}, {"id": 5858, "name": "שבתCCCתפילות_שבתCCCערבית_מוצאי_שבת", "title": "ערבית מוצאי שבת", "childs": []}, {"id": 5865, "name": "שבתCCCתפילות_שבתCCCשיר_השירים-דרשת_הרב", "title": "שיר השירים-דרשת הרב", "childs": []}, {"id": 5880, "name": "שבתCCCתפילות_שבתCCCקריאת_התורה", "title": "קריאת התורה", "childs": []}, {"id": 5893, "name": "שבתCCCתפילות_שבתCCCערבית", "title": "ערבית", "childs": []}, {"id": 5894, "name": "שבתCCCתפילות_שבתCCCמנחה", "title": "מנחה", "childs": []}, {"id": 5906, "name": "שבתCCCתפילות_שבתCCCקבלת_שבת", "title": "קבלת שבת", "childs": []}, {"id": 5909, "name": "שבתCCCתפילות_שבתCCCשחרית", "title": "שחרית", "childs": []}]}, {"id": 5645, "name": "שבתCCCשבת_–_שמירתה", "title": "שבת – שמירתה", "childs": [{"id": 5764, "name": "שבתCCCשבת_–_שמירתהCCCלימוד_תורה_בשבת", "title": "לימוד תורה בשבת", "childs": []}, {"id": 5823, "name": "שבתCCCשבת_–_שמירתהCCCכבוד_שבת", "title": "כבוד שבת", "childs": []}, {"id": 5897, "name": "שבתCCCשבת_–_שמירתהCCCמלבושי_שבת", "title": "מלבושי שבת", "childs": []}, {"id": 5912, "name": "שבתCCCשבת_–_שמירתהCCCעונג_שבת", "title": "עונג שבת", "childs": []}]}, {"id": 5672, "name": "שבתCCCמלאכות_שבת", "title": "מלאכות שבת", "childs": []}, {"id": 5673, "name": "שבתCCCערב_שבת", "title": "ערב שבת", "childs": [{"id": 5793, "name": "שבתCCCערב_שבתCCCערב_שבת", "title": "ערב שבת", "childs": []}, {"id": 5806, "name": "שבתCCCערב_שבתCCCטבילה_במקווה", "title": "טבילה במקווה", "childs": []}, {"id": 5807, "name": "שבתCCCערב_שבתCCCשנים_מקרא", "title": "שנים מקרא", "childs": []}, {"id": 5873, "name": "שבתCCCערב_שבתCCCהכנות_לשבת", "title": "הכנות לשבת", "childs": []}, {"id": 5913, "name": "שבתCCCערב_שבתCCCסעודה_בערב_שבת", "title": "סעודה בערב שבת", "childs": []}, {"id": 5929, "name": "שבתCCCערב_שבתCCCהדלקת_נרות", "title": "הדלקת נרות", "childs": []}]}, {"id": 5680, "name": "שבתCCCסעודות_שבת", "title": "סעודות שבת", "childs": [{"id": 5800, "name": "שבתCCCסעודות_שבתCCCמצות_ג__סעודות", "title": "מצות ג  סעודות", "childs": []}, {"id": 5811, "name": "שבתCCCסעודות_שבתCCCלחם_משנה", "title": "לחם משנה", "childs": []}, {"id": 5833, "name": "שבתCCCסעודות_שבתCCCקידוש", "title": "קידוש", "childs": []}, {"id": 5856, "name": "שבתCCCסעודות_שבתCCCברכות_הבנים", "title": "ברכות הבנים", "childs": []}, {"id": 5883, "name": "שבתCCCסעודות_שבתCCCסעודה_שניה", "title": "סעודה שניה", "childs": []}, {"id": 5884, "name": "שבתCCCסעודות_שבתCCCסעודה_שלישית", "title": "סעודה שלישית", "childs": []}, {"id": 5887, "name": "שבתCCCסעודות_שבתCCCסעודה_ראשונה", "title": "סעודה ראשונה", "childs": []}]}]}, {"id": 5599, "name": "תפילה_וברכות", "title": "תפילה וברכות", "childs": [{"id": 5623, "name": "תפילה_וברכותCCCשחרית", "title": "שחרית", "childs": [{"id": 5745, "name": "תפילה_וברכותCCCשחריתCCCציצית_ותפילין", "title": "ציצית ותפילין", "childs": []}, {"id": 5757, "name": "תפילה_וברכותCCCשחריתCCCאחר_התפילה", "title": "אחר התפילה", "childs": []}, {"id": 5784, "name": "תפילה_וברכותCCCשחריתCCCחיוב_נשים", "title": "חיוב נשים", "childs": []}, {"id": 5791, "name": "תפילה_וברכותCCCשחריתCCCפסוקי_דזמרה", "title": "פסוקי דזמרה", "childs": []}, {"id": 5802, "name": "תפילה_וברכותCCCשחריתCCCנץ_החמה", "title": "נץ החמה", "childs": []}, {"id": 5826, "name": "תפילה_וברכותCCCשחריתCCCפרשת_העקידה_וקורבנות", "title": "פרשת העקידה וקורבנות", "childs": []}, {"id": 5827, "name": "תפילה_וברכותCCCשחריתCCCמנין_פועלים", "title": "מנין פועלים", "childs": []}, {"id": 5835, "name": "תפילה_וברכותCCCשחריתCCCברכות_התורה", "title": "ברכות התורה", "childs": []}, {"id": 5885, "name": "תפילה_וברכותCCCשחריתCCCאשרי_עד_סיום_התפילה", "title": "אשרי עד סיום התפילה", "childs": []}, {"id": 5890, "name": "תפילה_וברכותCCCשחריתCCCקריאת_התורה_בשני_וחמישי", "title": "קריאת התורה בשני וחמישי", "childs": []}, {"id": 5899, "name": "תפילה_וברכותCCCשחריתCCCברכות_השחר", "title": "ברכות השחר", "childs": []}, {"id": 5903, "name": "תפילה_וברכותCCCשחריתCCCקריאת-שמע_וברכותיה", "title": "קריאת-שמע וברכותיה", "childs": []}, {"id": 5908, "name": "תפילה_וברכותCCCשחריתCCCשמונה_עשרה", "title": "שמונה עשרה", "childs": []}, {"id": 5911, "name": "תפילה_וברכותCCCשחריתCCCתחנון", "title": "תחנון", "childs": []}, {"id": 5916, "name": "תפילה_וברכותCCCשחריתCCCחזרת_השליח-ציבור", "title": "חזרת השליח-ציבור", "childs": []}, {"id": 5927, "name": "תפילה_וברכותCCCשחריתCCCברכת_כהנים", "title": "ברכת כהנים", "childs": []}, {"id": 5932, "name": "תפילה_וברכותCCCשחריתCCCאיחורים-דילוגים-השלמות", "title": "איחורים-דילוגים-השלמות", "childs": []}]}, {"id": 5628, "name": "תפילה_וברכותCCCברכות", "title": "ברכות", "childs": [{"id": 5749, "name": "תפילה_וברכותCCCברכותCCCפת_והבא_מחמת_הסעודה", "title": "פת והבא מחמת הסעודה", "childs": []}, {"id": 5767, "name": "תפילה_וברכותCCCברכותCCCברכות_הריח", "title": "ברכות הריח", "childs": []}, {"id": 5776, "name": "תפילה_וברכותCCCברכותCCCברכות_הראיה", "title": "ברכות הראיה", "childs": []}, {"id": 5812, "name": "תפילה_וברכותCCCברכותCCCשהחיינו", "title": "שהחיינו", "childs": []}, {"id": 5822, "name": "תפילה_וברכותCCCברכותCCCעיקר_וטפל", "title": "עיקר וטפל", "childs": []}, {"id": 5854, "name": "תפילה_וברכותCCCברכותCCCהפסק_ממקום_למקום", "title": "הפסק ממקום למקום", "childs": []}, {"id": 5855, "name": "תפילה_וברכותCCCברכותCCCהטוב_והמטיב_ויין", "title": "הטוב והמטיב ויין", "childs": []}, {"id": 5869, "name": "תפילה_וברכותCCCברכותCCCברכות_הנהנין", "title": "ברכות הנהנין", "childs": []}, {"id": 5904, "name": "תפילה_וברכותCCCברכותCCCמים_אחרונים", "title": "מים אחרונים", "childs": []}, {"id": 5922, "name": "תפילה_וברכותCCCברכותCCCברכת_המזון", "title": "ברכת המזון", "childs": []}, {"id": 5931, "name": "תפילה_וברכותCCCברכותCCCטיבולו_במשקה", "title": "טיבולו במשקה", "childs": []}]}, {"id": 5629, "name": "תפילה_וברכותCCCכללי", "title": "כללי", "childs": [{"id": 5750, "name": "תפילה_וברכותCCCכלליCCCבית_הכנסת", "title": "בית הכנסת", "childs": []}, {"id": 5762, "name": "תפילה_וברכותCCCכלליCCCתפילת_ציבור", "title": "תפילת ציבור", "childs": []}, {"id": 5782, "name": "תפילה_וברכותCCCכלליCCCספר_תורה", "title": "ספר תורה", "childs": []}, {"id": 5814, "name": "תפילה_וברכותCCCכלליCCCמעבר_לפני_המתפלל", "title": "מעבר לפני המתפלל", "childs": []}, {"id": 5838, "name": "תפילה_וברכותCCCכלליCCCתפילת_יחיד", "title": "תפילת יחיד", "childs": []}, {"id": 5864, "name": "תפילה_וברכותCCCכלליCCCחיובי_נשים", "title": "חיובי נשים", "childs": []}]}, {"id": 5630, "name": "תפילה_וברכותCCCהכנות_לתפילה", "title": "הכנות לתפילה", "childs": [{"id": 5751, "name": "תפילה_וברכותCCCהכנות_לתפילהCCCעשיית_צרכיו_ואכילה_לפני_תפילה", "title": "עשיית צרכיו ואכילה לפני תפילה", "childs": []}, {"id": 5763, "name": "תפילה_וברכותCCCהכנות_לתפילהCCCוהיה_מחניך_קדוש", "title": "והיה מחניך קדוש", "childs": []}, {"id": 5871, "name": "תפילה_וברכותCCCהכנות_לתפילהCCCלבוש_בתפילה", "title": "לבוש בתפילה", "childs": []}, {"id": 5876, "name": "תפילה_וברכותCCCהכנות_לתפילהCCCמקום_וצורת_התפילה", "title": "מקום וצורת התפילה", "childs": []}, {"id": 5917, "name": "תפילה_וברכותCCCהכנות_לתפילהCCCטבילת_שחרית", "title": "טבילת שחרית", "childs": []}, {"id": 5925, "name": "תפילה_וברכותCCCהכנות_לתפילהCCCעשרה_ראשונים", "title": "עשרה ראשונים", "childs": []}]}, {"id": 5654, "name": "תפילה_וברכותCCCמנחה", "title": "מנחה", "childs": [{"id": 5771, "name": "תפילה_וברכותCCCמנחהCCCזמן_השקיעה_וצאת_הכוכבים", "title": "זמן השקיעה וצאת הכוכבים", "childs": []}, {"id": 5794, "name": "תפילה_וברכותCCCמנחהCCCמנחה_גדולה-קטנה", "title": "מנחה גדולה-קטנה", "childs": []}, {"id": 5821, "name": "תפילה_וברכותCCCמנחהCCCתפילה_קצרה", "title": "תפילה קצרה", "childs": []}]}, {"id": 5670, "name": "תפילה_וברכותCCCנוסח_כוונות_וביאורי_התפילה", "title": "נוסח כוונות וביאורי התפילה", "childs": [{"id": 5788, "name": "תפילה_וברכותCCCנוסח_כוונות_וביאורי_התפילהCCCכוונת_ה", "title": "כוונת ה", "childs": []}, {"id": 5808, "name": "תפילה_וברכותCCCנוסח_כוונות_וביאורי_התפילהCCCפתח_אליהו", "title": "פתח אליהו", "childs": []}, {"id": 5845, "name": "תפילה_וברכותCCCנוסח_כוונות_וביאורי_התפילהCCCהנהגות_בתפילה", "title": "הנהגות בתפילה", "childs": []}, {"id": 5895, "name": "תפילה_וברכותCCCנוסח_כוונות_וביאורי_התפילהCCCנוסח_התפילה", "title": "נוסח התפילה", "childs": []}, {"id": 5918, "name": "תפילה_וברכותCCCנוסח_כוונות_וביאורי_התפילהCCCביאורי_התפילה", "title": "ביאורי התפילה", "childs": []}]}, {"id": 5675, "name": "תפילה_וברכותCCCתפילת_לחש", "title": "תפילת לחש", "childs": [{"id": 5795, "name": "תפילה_וברכותCCCתפילת_לחשCCCעושה_שלום_וברכה", "title": "עושה שלום וברכה", "childs": []}, {"id": 5832, "name": "תפילה_וברכותCCCתפילת_לחשCCCפסוק_המתאים_לשם_אדם", "title": "פסוק המתאים לשם אדם", "childs": []}, {"id": 5866, "name": "תפילה_וברכותCCCתפילת_לחשCCCתפילת_שמונה_עשרה", "title": "תפילת שמונה עשרה", "childs": []}]}, {"id": 5708, "name": "תפילה_וברכותCCCשליח-ציבור", "title": "שליח-ציבור", "childs": []}, {"id": 5714, "name": "תפילה_וברכותCCCערבית", "title": "ערבית", "childs": []}]}, {"id": 5600, "name": "שמחות_במעגל_החיים", "title": "שמחות במעגל החיים", "childs": [{"id": 5625, "name": "שמחות_במעגל_החייםCCCקריאת_שם", "title": "קריאת שם", "childs": [{"id": 5747, "name": "שמחות_במעגל_החייםCCCקריאת_שםCCCשמות_בנות", "title": "שמות בנות", "childs": []}, {"id": 5910, "name": "שמחות_במעגל_החייםCCCקריאת_שםCCCשמות_בנים", "title": "שמות בנים", "childs": []}, {"id": 5920, "name": "שמחות_במעגל_החייםCCCקריאת_שםCCCענייני_שמות", "title": "ענייני שמות", "childs": []}]}, {"id": 5636, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואין", "title": "אירוסין ונישואין", "childs": [{"id": 5754, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואיןCCCחתונה", "title": "חתונה", "childs": []}, {"id": 5772, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואיןCCCשידוכים", "title": "שידוכים", "childs": []}, {"id": 5843, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואיןCCCשבת_חתן", "title": "שבת חתן", "childs": []}, {"id": 5848, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואיןCCCערב_חתונה", "title": "ערב חתונה", "childs": []}, {"id": 5874, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואיןCCCאירוסין", "title": "אירוסין", "childs": []}, {"id": 5886, "name": "שמחות_במעגל_החייםCCCאירוסין_ונישואיןCCCשבע_ברכות", "title": "שבע ברכות", "childs": []}]}, {"id": 5647, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיון", "title": "יולדת ברית פדיון", "childs": [{"id": 5766, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCבריתה", "title": "בריתה", "childs": []}, {"id": 5774, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCיולדת", "title": "יולדת", "childs": []}, {"id": 5810, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCכסא_אליהו", "title": "כסא אליהו", "childs": []}, {"id": 5834, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCפדיון_הבן", "title": "פדיון הבן", "childs": []}, {"id": 5862, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCברית", "title": "ברית", "childs": []}, {"id": 5877, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCסנדק", "title": "סנדק", "childs": []}, {"id": 5889, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCהגומל", "title": "הגומל", "childs": []}, {"id": 5905, "name": "שמחות_במעגל_החייםCCCיולדת_ברית_פדיוןCCCברית_יצחק", "title": "ברית יצחק", "childs": []}]}, {"id": 5655, "name": "שמחות_במעגל_החייםCCCיום_הולדת", "title": "יום הולדת", "childs": []}, {"id": 5666, "name": "שמחות_במעגל_החייםCCCהפריה_והריון", "title": "הפריה והריון", "childs": [{"id": 5783, "name": "שמחות_במעגל_החייםCCCהפריה_והריוןCCCהריון", "title": "הריון", "childs": []}, {"id": 5815, "name": "שמחות_במעגל_החייםCCCהפריה_והריוןCCCהפריה", "title": "הפריה", "childs": []}]}, {"id": 5721, "name": "שמחות_במעגל_החייםCCCחנוכת_הבית", "title": "חנוכת הבית", "childs": []}]}, {"id": 5601, "name": "כשרות_המזון", "title": "כשרות המזון", "childs": [{"id": 5627, "name": "כשרות_המזוןCCCהכשרת_כלים", "title": "הכשרת כלים", "childs": []}, {"id": 5656, "name": "כשרות_המזוןCCCבישולי_עכום", "title": "בישולי עכום", "childs": []}, {"id": 5660, "name": "כשרות_המזוןCCCיין_נסך", "title": "יין נסך", "childs": []}, {"id": 5661, "name": "כשרות_המזוןCCCמאכלות_אסורות", "title": "מאכלות אסורות", "childs": []}, {"id": 5684, "name": "כשרות_המזוןCCCאוכלים_גלויים_שעבר_עליהם_לילה", "title": "אוכלים גלויים שעבר עליהם לילה", "childs": []}, {"id": 5688, "name": "כשרות_המזוןCCCילדים", "title": "ילדים", "childs": []}, {"id": 5696, "name": "כשרות_המזוןCCCמליחה_וצלייה", "title": "מליחה וצלייה", "childs": []}, {"id": 5704, "name": "כשרות_המזוןCCCבשר_וחלב", "title": "בשר וחלב", "childs": []}, {"id": 5706, "name": "כשרות_המזוןCCCדגים", "title": "דגים", "childs": []}, {"id": 5738, "name": "כשרות_המזוןCCCתולעים", "title": "תולעים", "childs": []}]}, {"id": 5602, "name": "ביאורי_תורה", "title": "ביאורי תורה", "childs": [{"id": 5631, "name": "ביאורי_תורהCCCמשנה_וגמרא", "title": "משנה וגמרא", "childs": []}, {"id": 5641, "name": "ביאורי_תורהCCCנך", "title": "נך", "childs": []}, {"id": 5720, "name": "ביאורי_תורהCCCתורה", "title": "תורה", "childs": []}, {"id": 5735, "name": "ביאורי_תורהCCCמדרש_וקבלה", "title": "מדרש וקבלה", "childs": []}]}, {"id": 5603, "name": "מצוות_התלויות_בארץ", "title": "מצוות התלויות בארץ", "childs": [{"id": 5632, "name": "מצוות_התלויות_בארץCCCשביעית", "title": "שביעית", "childs": []}, {"id": 5687, "name": "מצוות_התלויות_בארץCCCמעשרות", "title": "מעשרות", "childs": []}, {"id": 5709, "name": "מצוות_התלויות_בארץCCCערלה", "title": "ערלה", "childs": []}, {"id": 5712, "name": "מצוות_התלויות_בארץCCCהפרשת_חלה", "title": "הפרשת חלה", "childs": []}, {"id": 5718, "name": "מצוות_התלויות_בארץCCCכלאים", "title": "כלאים", "childs": []}]}, {"id": 5604, "name": "חיי_היום-יום", "title": "חיי היום-יום", "childs": [{"id": 5633, "name": "חיי_היום-יוםCCCלימוד_תורה", "title": "לימוד תורה", "childs": [{"id": 5753, "name": "חיי_היום-יוםCCCלימוד_תורהCCCחוק_לישראל", "title": "חוק לישראל", "childs": []}, {"id": 5787, "name": "חיי_היום-יוםCCCלימוד_תורהCCCלימוד_תורה_בגירסה", "title": "לימוד תורה בגירסה", "childs": []}, {"id": 5824, "name": "חיי_היום-יוםCCCלימוד_תורהCCCקריאת_שמע_שעל_המיטה", "title": "קריאת שמע שעל המיטה", "childs": []}, {"id": 5850, "name": "חיי_היום-יוםCCCלימוד_תורהCCCסדר_הלימוד", "title": "סדר הלימוד", "childs": []}]}, {"id": 5650, "name": "חיי_היום-יוםCCCקריאת_שמע_שעל_המיטה", "title": "קריאת שמע שעל המיטה", "childs": []}, {"id": 5664, "name": "חיי_היום-יוםCCCתיקון_חצות", "title": "תיקון חצות", "childs": [{"id": 5781, "name": "חיי_היום-יוםCCCתיקון_חצותCCCתיקון_חצות", "title": "תיקון חצות", "childs": []}, {"id": 5882, "name": "חיי_היום-יוםCCCתיקון_חצותCCCנשים_בתיקון_חצות", "title": "נשים בתיקון חצות", "childs": []}, {"id": 5902, "name": "חיי_היום-יוםCCCתיקון_חצותCCCבין-המצרים", "title": "בין-המצרים", "childs": []}]}, {"id": 5697, "name": "חיי_היום-יוםCCCענייני_הלילה", "title": "ענייני הלילה", "childs": [{"id": 5844, "name": "חיי_היום-יוםCCCענייני_הלילהCCCהשכמת_הבוקר", "title": "השכמת הבוקר", "childs": []}]}, {"id": 5702, "name": "חיי_היום-יוםCCCזמני_היום", "title": "זמני היום", "childs": []}, {"id": 5733, "name": "חיי_היום-יוםCCCקריאת_תהלים", "title": "קריאת תהלים", "childs": []}]}, {"id": 5605, "name": "עניינים_שונים", "title": "עניינים שונים", "childs": [{"id": 5634, "name": "עניינים_שוניםCCCלא_תנחשו", "title": "לא תנחשו", "childs": []}, {"id": 5659, "name": "עניינים_שוניםCCCלא_ילבש", "title": "לא ילבש", "childs": []}, {"id": 5681, "name": "עניינים_שוניםCCCגיורים_וגרים", "title": "גיורים וגרים", "childs": []}, {"id": 5682, "name": "עניינים_שוניםCCCעבודה_זרה", "title": "עבודה זרה", "childs": []}, {"id": 5686, "name": "עניינים_שוניםCCCטומאת_מת", "title": "טומאת מת", "childs": []}, {"id": 5690, "name": "עניינים_שוניםCCCריבית", "title": "ריבית", "childs": []}, {"id": 5691, "name": "עניינים_שוניםCCCשילוח_הקן", "title": "שילוח הקן", "childs": []}, {"id": 5693, "name": "עניינים_שוניםCCCסתם", "title": "סתם", "childs": []}, {"id": 5699, "name": "עניינים_שוניםCCCמזוזה", "title": "מזוזה", "childs": []}, {"id": 5701, "name": "עניינים_שוניםCCCגילוח", "title": "גילוח", "childs": []}, {"id": 5703, "name": "עניינים_שוניםCCCקדושת_ספרים_וגניזה", "title": "קדושת ספרים וגניזה", "childs": []}, {"id": 5724, "name": "עניינים_שוניםCCCכתובת_קעקע", "title": "כתובת קעקע", "childs": []}, {"id": 5732, "name": "עניינים_שוניםCCCשעטנז", "title": "שעטנז", "childs": []}]}, {"id": 5606, "name": "קדושה_וצניעות", "title": "קדושה וצניעות", "childs": [{"id": 5635, "name": "קדושה_וצניעותCCCנטילת_ידיים", "title": "נטילת ידיים", "childs": []}, {"id": 5652, "name": "קדושה_וצניעותCCCטבילת_שחרית", "title": "טבילת שחרית", "childs": []}, {"id": 5713, "name": "קדושה_וצניעותCCCהנהגת_בית_הכיסא", "title": "הנהגת בית הכיסא", "childs": []}, {"id": 5717, "name": "קדושה_וצניעותCCCצניעות", "title": "צניעות", "childs": []}, {"id": 5725, "name": "קדושה_וצניעותCCCיחוד", "title": "יחוד", "childs": []}, {"id": 5730, "name": "קדושה_וצניעותCCCהליכה_בין_שתי_נשים/אנשים", "title": "הליכה בין שתי נשים/אנשים", "childs": []}, {"id": 5736, "name": "קדושה_וצניעותCCCגברים", "title": "גברים", "childs": []}]}, {"id": 5607, "name": "גלות_וגאולה", "title": "גלות וגאולה", "childs": [{"id": 5637, "name": "גלות_וגאולהCCCזכר_לחורבן", "title": "זכר לחורבן", "childs": []}, {"id": 5676, "name": "גלות_וגאולהCCCהר_הבית", "title": "הר הבית", "childs": []}, {"id": 5695, "name": "גלות_וגאולהCCCארץ_ישראל", "title": "ארץ ישראל", "childs": []}, {"id": 5716, "name": "גלות_וגאולהCCCכותל_המערבי", "title": "כותל המערבי", "childs": []}, {"id": 5734, "name": "גלות_וגאולהCCCעולם_הבא", "title": "עולם הבא", "childs": []}, {"id": 5741, "name": "גלות_וגאולהCCCביאת_המשיח", "title": "ביאת המשיח", "childs": []}]}, {"id": 5608, "name": "מידות_השקפה_והנהגה", "title": "מידות השקפה והנהגה", "childs": [{"id": 5638, "name": "מידות_השקפה_והנהגהCCCחינוך_ילדים", "title": "חינוך ילדים", "childs": []}, {"id": 5640, "name": "מידות_השקפה_והנהגהCCCשמיעת_מוזיקה", "title": "שמיעת מוזיקה", "childs": []}, {"id": 5662, "name": "מידות_השקפה_והנהגהCCCזמן_מלחמה", "title": "זמן מלחמה", "childs": []}, {"id": 5667, "name": "מידות_השקפה_והנהגהCCCזמן_מגיפה", "title": "זמן מגיפה", "childs": []}, {"id": 5678, "name": "מידות_השקפה_והנהגהCCCכבוד_תלמיד_חכם_ורבו", "title": "כבוד תלמיד חכם ורבו", "childs": []}, {"id": 5692, "name": "מידות_השקפה_והנהגהCCCכיבוד_אב_ואם", "title": "כיבוד אב ואם", "childs": []}, {"id": 5700, "name": "מידות_השקפה_והנהגהCCCצורת_הלבוש", "title": "צורת הלבוש", "childs": []}, {"id": 5719, "name": "מידות_השקפה_והנהגהCCCמידות_ודרך_ארץ", "title": "מידות ודרך ארץ", "childs": []}, {"id": 5723, "name": "מידות_השקפה_והנהגהCCCכבוד_תח_ורבו", "title": "כבוד תח ורבו", "childs": []}, {"id": 5729, "name": "מידות_השקפה_והנהגהCCCהנהגת_העולם", "title": "הנהגת העולם", "childs": []}, {"id": 5731, "name": "מידות_השקפה_והנהגהCCCלשון_הרע", "title": "לשון הרע", "childs": []}, {"id": 5737, "name": "מידות_השקפה_והנהגהCCCאינטרנט", "title": "אינטרנט", "childs": []}]}, {"id": 5609, "name": "דיני_ממונות", "title": "דיני ממונות", "childs": [{"id": 5642, "name": "דיני_ממונותCCCצדקה_ומעשר_כספים", "title": "צדקה ומעשר כספים", "childs": [{"id": 5758, "name": "דיני_ממונותCCCצדקה_ומעשר_כספיםCCCצדקה", "title": "צדקה", "childs": []}, {"id": 5789, "name": "דיני_ממונותCCCצדקה_ומעשר_כספיםCCCמעשר_כספים", "title": "מעשר כספים", "childs": []}]}, {"id": 5657, "name": "דיני_ממונותCCCגזל", "title": "גזל", "childs": [{"id": 5775, "name": "דיני_ממונותCCCגזלCCCהשבת_אבידה", "title": "השבת אבידה", "childs": []}, {"id": 5896, "name": "דיני_ממונותCCCגזלCCCהלוואה", "title": "הלוואה", "childs": []}]}, {"id": 5658, "name": "דיני_ממונותCCCשמיטת_כספים_ופרוזבול", "title": "שמיטת כספים ופרוזבול", "childs": []}, {"id": 5671, "name": "דיני_ממונותCCCנדרים", "title": "נדרים", "childs": [{"id": 5790, "name": "דיני_ממונותCCCנדריםCCCנדרים", "title": "נדרים", "childs": []}, {"id": 5901, "name": "דיני_ממונותCCCנדריםCCCנדבות", "title": "נדבות", "childs": []}]}, {"id": 5698, "name": "דיני_ממונותCCCהלוואה", "title": "הלוואה", "childs": []}, {"id": 5707, "name": "דיני_ממונותCCCירושה", "title": "ירושה", "childs": []}, {"id": 5739, "name": "דיני_ממונותCCCהשבת_אבידה", "title": "השבת אבידה", "childs": []}]}, {"id": 5610, "name": "תשובה_ותיקונים", "title": "תשובה ותיקונים", "childs": [{"id": 5643, "name": "תשובה_ותיקוניםCCCשונות", "title": "שונות", "childs": []}, {"id": 5674, "name": "תשובה_ותיקוניםCCCימי_השובבים", "title": "ימי השובבים", "childs": []}, {"id": 5685, "name": "תשובה_ותיקוניםCCCתענית_חצי_יום", "title": "תענית חצי יום", "childs": []}, {"id": 5710, "name": "תשובה_ותיקוניםCCCתיקונים", "title": "תיקונים", "childs": []}]}, {"id": 5611, "name": "אמונה_וביטחון", "title": "אמונה וביטחון", "childs": [{"id": 5644, "name": "אמונה_וביטחוןCCCאמונה_וביטחון", "title": "אמונה וביטחון", "childs": []}, {"id": 5689, "name": "אמונה_וביטחוןCCCעבודת_ה", "title": "עבודת ה", "childs": []}, {"id": 5728, "name": "אמונה_וביטחוןCCCלימוד_בכולל", "title": "לימוד בכולל", "childs": []}, {"id": 5740, "name": "אמונה_וביטחוןCCCפרנסה", "title": "פרנסה", "childs": []}]}, {"id": 5612, "name": "קבורה_ובית_החיים", "title": "קבורה ובית החיים", "childs": []}, {"id": 5613, "name": "אבילות", "title": "אבילות", "childs": [{"id": 5648, "name": "אבילותCCCעילוי_נשמה", "title": "עילוי נשמה", "childs": [{"id": 5768, "name": "אבילותCCCעילוי_נשמהCCCשונות", "title": "שונות", "childs": []}, {"id": 5836, "name": "אבילותCCCעילוי_נשמהCCCנרות", "title": "נרות", "childs": []}]}, {"id": 5651, "name": "אבילותCCCשבעה_ושלושים", "title": "שבעה ושלושים", "childs": [{"id": 5773, "name": "אבילותCCCשבעה_ושלושיםCCCבית_האבל", "title": "בית האבל", "childs": []}, {"id": 5829, "name": "אבילותCCCשבעה_ושלושיםCCCעליה_לקבר", "title": "עליה לקבר", "childs": []}]}, {"id": 5663, "name": "אבילותCCCיב_חודש", "title": "יב חודש", "childs": [{"id": 5780, "name": "אבילותCCCיב_חודשCCCדיני_אבלות", "title": "דיני אבלות", "childs": []}, {"id": 5797, "name": "אבילותCCCיב_חודשCCCאזכרה", "title": "אזכרה", "childs": []}, {"id": 5828, "name": "אבילותCCCיב_חודשCCCנר_נשמה", "title": "נר נשמה", "childs": []}, {"id": 5852, "name": "אבילותCCCיב_חודשCCCקדיש", "title": "קדיש", "childs": []}, {"id": 5863, "name": "אבילותCCCיב_חודשCCCתענית_יב_חודש", "title": "תענית יב חודש", "childs": []}]}, {"id": 5668, "name": "אבילותCCCאבלות_אחר_יב", "title": "אבלות אחר יב", "childs": []}]}, {"id": 5614, "name": "טהרת_המשפחה", "title": "טהרת המשפחה", "childs": [{"id": 5665, "name": "טהרת_המשפחהCCCנדה", "title": "נדה", "childs": []}, {"id": 5683, "name": "טהרת_המשפחהCCCהנהגת_הבית", "title": "הנהגת הבית", "childs": [{"id": 5809, "name": "טהרת_המשפחהCCCהנהגת_הביתCCCמגורים", "title": "מגורים", "childs": []}, {"id": 5861, "name": "טהרת_המשפחהCCCהנהגת_הביתCCCשלום_בית", "title": "שלום בית", "childs": []}]}]}, {"id": 5616, "name": "שמירת_הגוף_ונפש", "title": "שמירת הגוף ונפש", "childs": [{"id": 5705, "name": "שמירת_הגוף_ונפשCCCענייני_אכילה", "title": "ענייני אכילה", "childs": []}, {"id": 5711, "name": "שמירת_הגוף_ונפשCCCעין_הרע", "title": "עין הרע", "childs": []}, {"id": 5722, "name": "שמירת_הגוף_ונפשCCCהריון_ולידה", "title": "הריון ולידה", "childs": []}, {"id": 5726, "name": "שמירת_הגוף_ונפשCCCענייני_המגיפה", "title": "ענייני המגיפה", "childs": []}, {"id": 5727, "name": "שמירת_הגוף_ונפשCCCתספורת_וציפורניים", "title": "תספורת וציפורניים", "childs": []}]}, {"id": 5617, "name": "ספרים_וסופרים", "title": "ספרים וסופרים", "childs": [{"id": 5694, "name": "ספרים_וסופריםCCCקבלת_הוראות_מרן", "title": "קבלת הוראות מרן", "childs": []}]}, {"id": 5618, "name": "חלומות", "title": "חלומות", "childs": []}, {"id": 5619, "name": "קברי_צדיקים", "title": "קברי צדיקים", "childs": []}];
-const API = 'https://search.sbms.io/indexes/qa/search';
-const TOK = 'f51676f3-c594-4868-aa24-31cf8e651a2f';
+const DATA_URL = 'qna_data.json';
 
 let catName = '', offset = 0, total = 0, loaded = [], srchQ = '';
 let pageMode = 25;   // 25 = paginated, 0 = load all
 let isMainFeed = false;
+let allQas = [];
+let dataReady = loadDataset();
 
 /* Build main select */
 (function(){
@@ -673,6 +310,7 @@ function setMode(m){
 
 /* Main feed — all Q&As, no category filter */
 async function loadAllQs(){
+  await dataReady;
   isMainFeed = true;
   catName = ''; srchQ='';
   document.getElementById('srch').value='';
@@ -699,6 +337,7 @@ function onSearch(){
   clearBtn.classList.toggle('hidden', !srchQ);
   clearTimeout(srchTimer);
   srchTimer = setTimeout(async ()=>{
+    await dataReady;
     offset=0; loaded=[];
     hide('welcome'); show('results');
     document.getElementById('results').innerHTML = loaderHTML();
@@ -717,6 +356,7 @@ function clearSearch(){
 
 /* Load category Q&As */
 async function loadQ(){
+  await dataReady;
   if(!catName) return;
   isMainFeed = false;
   document.getElementById('btn-all-qs').classList.remove('active');
@@ -736,17 +376,9 @@ async function loadQ(){
 async function fetchPage(){
   try{
     const pg = isMainFeed ? 25 : (pageMode === 0 ? 100 : pageMode);
-    const body = {offset, limit:pg, sort:['qid:desc']};
-    if(catName) body.filter = 'qacat = "'+catName+'"';
-    if(srchQ) body.q = srchQ;
-    const r = await fetch(API, {
-      method:'POST',
-      headers:{'Authorization':'Bearer '+TOK,'Content-Type':'application/json'},
-      body: JSON.stringify(body)
-    });
-    const d = await r.json();
-    total = d.estimatedTotalHits || 0;
-    const hits = d.hits || [];
+    const all = localResults();
+    total = all.length;
+    const hits = all.slice(offset, offset + pg);
     loaded = loaded.concat(hits);
     offset += hits.length;
     document.getElementById('hdr-total').textContent = total.toLocaleString();
@@ -754,44 +386,22 @@ async function fetchPage(){
     document.getElementById('hdr-loaded-wrap').classList.remove('hidden');
     render(loaded);
   } catch(e){
-    document.getElementById('results').innerHTML = '<div class="empty-s"><div class="empty-ico">⚠️</div><h3>שגיאה בטעינת נתונים</h3></div>';
+    renderFetchError(e);
   }
 }
 
 /* Load ALL pages automatically with progress */
 async function fetchAll(){
-  const BATCH = 100;
-  // First fetch to get total
   try{
-    const body = {offset:0, limit:BATCH, sort:['qid:desc']};
-    if(catName) body.filter = 'qacat = "'+catName+'"';
-    if(srchQ) body.q = srchQ;
-    const r = await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+TOK,'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const d = await r.json();
-    total = d.estimatedTotalHits || 0;
-    const hits = d.hits || [];
-    loaded = hits; offset = hits.length;
+    loaded = localResults();
+    total = loaded.length;
+    offset = loaded.length;
     document.getElementById('hdr-total').textContent = total.toLocaleString();
+    document.getElementById('hdr-loaded').textContent = loaded.length.toLocaleString();
     document.getElementById('hdr-loaded-wrap').classList.remove('hidden');
-    showProgress(loaded.length, total);
-
-    // Fetch remaining pages
-    while(offset < total){
-      const body2 = {offset, limit:BATCH, sort:['qid:desc']};
-      if(catName) body2.filter = 'qacat = "'+catName+'"';
-      if(srchQ) body2.q = srchQ;
-      const r2 = await fetch(API,{method:'POST',headers:{'Authorization':'Bearer '+TOK,'Content-Type':'application/json'},body:JSON.stringify(body2)});
-      const d2 = await r2.json();
-      const hits2 = d2.hits || [];
-      if(!hits2.length) break;
-      loaded = loaded.concat(hits2);
-      offset += hits2.length;
-      document.getElementById('hdr-loaded').textContent = loaded.length.toLocaleString();
-      showProgress(loaded.length, total);
-    }
     render(loaded);
   } catch(e){
-    document.getElementById('results').innerHTML = '<div class="empty-s"><div class="empty-ico">⚠️</div><h3>שגיאה בטעינת נתונים</h3></div>';
+    renderFetchError(e);
   }
 }
 
@@ -819,6 +429,53 @@ function hl(t, q){
   if(!q||!t) return esc(t||'');
   const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
   return esc(t).replace(re, m=>'<mark>'+m+'</mark>');
+}
+
+function localMatches(item){
+  if(catName && item.qacat !== catName) return false;
+  if(!srchQ) return true;
+  const q = srchQ.toLowerCase();
+  return ((item.question||'')+' '+(item.answer||'')+' '+(item.qid||'')).toLowerCase().includes(q);
+}
+
+function localResults(){
+  return allQas.filter(localMatches).sort((a,b)=>(b.qid||0)-(a.qid||0));
+}
+
+function fetchErrorMessage(err){
+  const msg = err && err.message ? err.message : '';
+  return msg ? ' — '+esc(msg) : '';
+}
+
+function renderFetchError(err){
+  document.getElementById('results').innerHTML =
+    '<div class="empty-s"><div class="empty-ico">⚠️</div><h3>שגיאה בטעינת נתונים'+fetchErrorMessage(err)+'</h3></div>';
+}
+
+function normalizeQa(item){
+  return {
+    qid: Number(item.qid || item.id),
+    question: item.question || '',
+    answer: item.answer || '',
+    questionDate: (item.questionDate || item.date || '').slice(0,10),
+    qacat: item.qacat || item.cat || ''
+  };
+}
+
+async function loadDataset(){
+  const ctrl = new AbortController();
+  const timeout = setTimeout(()=>ctrl.abort(), 4500);
+  try{
+    const r = await fetch(DATA_URL, {cache:'no-store', signal: ctrl.signal});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d = await r.json();
+    const items = Array.isArray(d) ? d : Object.values(d || {});
+    allQas = items.map(normalizeQa).filter(x=>x.qid).sort((a,b)=>b.qid-a.qid);
+    document.getElementById('hdr-total').textContent = allQas.length.toLocaleString();
+    return allQas;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function render(cards){
@@ -1032,6 +689,15 @@ function clearAll(){
   document.getElementById('hdr-loaded-wrap').classList.add('hidden');
   catName=''; loaded=[]; srchQ=''; offset=0; total=0; isMainFeed=false;
   setMode(25);
+}
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(r=>console.log('SW registered'))
+      .catch(e=>console.log('SW error', e));
+  });
 }
 </script>
 </body>
